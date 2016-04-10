@@ -2,31 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <artifactId>parent</artifactId>
+        <groupId>com.negod.archetype</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <groupId>com.negod.archetype</groupId>
-    <artifactId>JavaEE7-Archetype</artifactId>
+    <artifactId>application</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>${project.artifactId}</name>
-
-    <properties>
-        <!-- Dependency versions -->
-        <slf4j.version>1.7.12</slf4j.version>
-        <logback.version>1.1.3</logback.version>
-        <logback.core.version>1.1.3</logback.core.version>
-        <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
-        <!-- LOGGING configuration -->
-        <application.name>${project.artifactId}</application.name>
-        <application.version>${project.version}</application.version>
-        <application.logfile>/app/logs/${project.artifactId}/${project.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.artifactId}/${project.artifactId}-error.log</application.error.logfile>
-        
-        <!-- SWAGGER generation -->
-        <hostname>localhost</hostname>
-        <port>8080</port>
-    </properties>
+    <name>Application</name>
     
     <dependencies>
         <!-- JPA provider -->
