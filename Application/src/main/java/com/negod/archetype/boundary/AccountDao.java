@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.negod.archetype.dao;
+package com.negod.archetype.boundary;
 
+import com.negod.archetype.generic.GenericDao;
 import com.negod.archetype.entity.Account;
-import com.negod.archetype.exception.DaoException;
+import com.negod.archetype.boundary.exception.DaoException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
@@ -23,7 +24,7 @@ public class AccountDao extends GenericDao<Account> {
     }
 
     @Override
-    public void delete(String externalId) {
+    public Boolean delete(String externalId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

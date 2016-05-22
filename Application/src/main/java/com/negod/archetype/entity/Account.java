@@ -5,6 +5,7 @@
  */
 package com.negod.archetype.entity;
 
+import com.negod.archetype.generic.GenericEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -15,6 +16,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Store;
 
 /**
  *
@@ -31,6 +34,7 @@ public class Account extends GenericEntity {
 
     private static final long serialVersionUID = 1L;
 
+    @Field(store = Store.YES)
     @Column(name = "name", insertable = true)
     @XmlElement
     private String name;

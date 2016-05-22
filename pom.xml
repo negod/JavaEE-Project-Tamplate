@@ -27,11 +27,20 @@
         <!-- SWAGGER generation -->
         <hostname>localhost</hostname>
         <port>8080</port>
+        
+        <!-- Database init properties -->
+        <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
+        <db.driver>org.postgresql.Driver</db.driver>
+        <db.url>jdbc:postgresql://localhost:5432/db71u</db.url>
+        <db.user>user</db.user>
+        <db.passwd>password</db.passwd>
+        <db.defaultSchema>schema</db.defaultSchema>
+        <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
 		
     </properties>
     
     <modules>
-        <!-- module>Database</module -->
+        <module>Database</module>
         <module>Application</module>
         <!-- module>Frontend</module -->
     </modules>

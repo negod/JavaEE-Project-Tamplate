@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>CUSTOM-Liquibase Status</actionName>
+            <displayName>Liquibase Status</displayName>
+            <goals>
+                <goal>liquibase:status</goal>
+            </goals>
+            <properties>
+                <db.user>root</db.user>
+                <db.password>admin</db.password>
+                <db.ip>localhost</db.ip>
+                <db.port>3306</db.port>
+                <db.schema>dev</db.schema>
+                
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>mysql</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-Liquibase Update</actionName>
+            <displayName>Liquibase Update</displayName>
+            <goals>
+                <goal>liquibase:update</goal>
+            </goals>
+            <properties>
+                <db.user>root</db.user>
+                <db.password>admin</db.password>
+                <db.ip>localhost</db.ip>
+                <db.port>3306</db.port>
+                <db.schema>dev</db.schema>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>mysql</activatedProfile>
+            </activatedProfiles>
+        </action>
+        <action>
+            <actionName>CUSTOM-Liquibase DropAll</actionName>
+            <displayName>Liquibase DropAll</displayName>
+            <goals>
+                <goal>liquibase:dropAll</goal>
+            </goals>
+            <properties>
+                <db.user>root</db.user>
+                <db.password>admin</db.password>
+                <db.ip>localhost</db.ip>
+                <db.port>3306</db.port>
+                <db.schema>dev</db.schema>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>mysql</activatedProfile>
+            </activatedProfiles>
+        </action>
+    </actions>

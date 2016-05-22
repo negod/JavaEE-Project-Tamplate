@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.negod.archetype.service;
+package com.negod.archetype.control;
 
-import com.negod.archetype.dao.AccountDao;
+import com.negod.archetype.boundary.AccountDao;
 import com.negod.archetype.entity.Account;
+import java.util.List;
+import java.util.Optional;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -50,12 +52,47 @@ public class AccountService {
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccounts(@PathParam("id") String id) {
+    public Response getAccountById(@PathParam("id") String id) {
         try {
-            Account accountById = accountDao.getById(id);
-            return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+            Optional<Account> account = accountDao.getById(id);
+            if (account.isPresent()) {
+                Account accountById = account.get();
+                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.noContent().build();
+            }
         } catch (Exception e) {
             log.error("Error when getting account by ID {}", id, e);
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * @responseType java.util.List<com.negod.archetype.entity.Account>
+     *
+     * @responseMessage 200 Account successfully retrieved
+     * @responseMessage 500 Error when retrieving the account
+     *
+     * @summary Gets a account by its id
+     *
+     *
+     * @return
+     */
+    @GET
+    @Path("/")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getAccounts() {
+        try {
+            Optional<List<Account>> accountList = accountDao.getAll();
+            if (accountList.isPresent()) {
+                List<Account> accountById = accountList.get();
+                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.noContent().build();
+            }
+        } catch (Exception e) {
+            log.error("Error when getting account by ID {}", e);
             return Response.serverError().build();
         }
     }
@@ -78,8 +115,12 @@ public class AccountService {
     @Produces({MediaType.APPLICATION_JSON})
     public Response create(Account account) {
         try {
-            Account accountById = accountDao.persist(account);
-            return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+            Optional<Account> accountById = accountDao.persist(account);
+            if (accountById.isPresent()) {
+                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.noContent().build();
+            }
         } catch (Exception e) {
             log.error("Error when creating account {}", account.toString(), e);
             return Response.serverError().build();

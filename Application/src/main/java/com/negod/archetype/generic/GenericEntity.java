@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.negod.archetype.entity;
+package com.negod.archetype.generic;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,6 +26,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.search.annotations.Field;
 
 /**
  *
@@ -49,6 +50,7 @@ public class GenericEntity implements Serializable {
     @Column(unique = true, updatable = false, insertable = true, name = "extId")
     @Pattern(regexp = "[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}")
     @XmlElement
+    @Field()
     private String id;
 
     @NotNull(message = "Updated date cannot be null and all CRUD operations must have a date")
