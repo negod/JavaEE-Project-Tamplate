@@ -11,7 +11,7 @@
     <changeSet author="authorName" id="Create Account Table">
 
         <createTable tableName="account" remarks="Table handling accounts" >
-            <column name="id" type="bigint" remarks="Primary key">
+            <column name="id" type="bigint" remarks="Primary key" autoIncrement="true">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="account_pk"/>
             </column>
             <column name="extId" type="varchar(36)" remarks="Id that can be used extarnally">
@@ -21,7 +21,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="name" type="varchar(36)" remarks="A name for the account">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
 
