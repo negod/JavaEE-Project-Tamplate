@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author Joakim Johansson ( joakimjohansson@outlook.com )
  */
-@Stateless
 @Path("/account")
+@Stateless
 public class AccountService {
 
     Logger log = LoggerFactory.getLogger(AccountService.class);
@@ -53,11 +53,11 @@ public class AccountService {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAccountById(@PathParam("id") String id) {
+        log.debug("Getting account by id: {}", id);
         try {
             Optional<Account> account = accountDao.getById(id);
             if (account.isPresent()) {
-                Account accountById = account.get();
-                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+                return Response.ok(account.get(), MediaType.APPLICATION_JSON).build();
             } else {
                 return Response.noContent().build();
             }
@@ -73,7 +73,7 @@ public class AccountService {
      * @responseMessage 200 Account successfully retrieved
      * @responseMessage 500 Error when retrieving the account
      *
-     * @summary Gets a account by its id
+     * @summary Get all accounts
      *
      *
      * @return
@@ -83,6 +83,7 @@ public class AccountService {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAccounts() {
+        log.debug("Getting all accounts");
         try {
             Optional<List<Account>> accountList = accountDao.getAll();
             if (accountList.isPresent()) {
@@ -92,7 +93,7 @@ public class AccountService {
                 return Response.noContent().build();
             }
         } catch (Exception e) {
-            log.error("Error when getting account by ID {}", e);
+            log.error("Error when getting accounts {}", e);
             return Response.serverError().build();
         }
     }
@@ -114,10 +115,11 @@ public class AccountService {
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     public Response create(Account account) {
+        log.debug("Creating account {}", account.toString());
         try {
             Optional<Account> accountById = accountDao.persist(account);
             if (accountById.isPresent()) {
-                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
+                return Response.ok(accountById.get(), MediaType.APPLICATION_JSON).build();
             } else {
                 return Response.noContent().build();
             }

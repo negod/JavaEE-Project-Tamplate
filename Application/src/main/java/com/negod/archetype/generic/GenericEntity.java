@@ -35,14 +35,14 @@ import org.hibernate.search.annotations.Field;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@ToString
+@ToString(doNotUseGetters = true)
 @Getter
 @Setter
 @EqualsAndHashCode
 public class GenericEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long internalId;
 
@@ -54,7 +54,7 @@ public class GenericEntity implements Serializable {
     private String id;
 
     @NotNull(message = "Updated date cannot be null and all CRUD operations must have a date")
-    @Column(name = "updatedDate")
+    @Column(name = "updatedTime")
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @XmlElement
     private Date updatedDate;

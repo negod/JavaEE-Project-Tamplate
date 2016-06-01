@@ -8,6 +8,7 @@ package com.negod.archetype.entity;
 import com.negod.archetype.generic.GenericEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,7 +27,7 @@ import org.hibernate.search.annotations.Store;
 @Entity
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@ToString(callSuper = true)
+@ToString(callSuper = true, doNotUseGetters = true)
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
@@ -35,7 +36,7 @@ public class Account extends GenericEntity {
     private static final long serialVersionUID = 1L;
 
     @Field(store = Store.YES)
-    @Column(name = "name", insertable = true)
+    @Column(name = "name", insertable = true, unique = true)
     @XmlElement
     private String name;
 
