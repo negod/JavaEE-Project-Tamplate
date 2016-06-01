@@ -12,31 +12,11 @@
     <properties>
 	
         <!-- Dependency versions -->
-        <slf4j.version>1.7.12</slf4j.version>
-        <logback.version>1.1.3</logback.version>
-        <logback.core.version>1.1.3</logback.core.version>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-        <!-- LOGGING configuration -->
-        <application.name>${project.artifactId}</application.name>
-        <application.version>${project.version}</application.version>
-        <application.logfile>/app/logs/${project.artifactId}/${project.artifactId}.log</application.logfile>
-        <application.error.logfile>/app/logs/${project.artifactId}/${project.artifactId}-error.log</application.error.logfile>
         
-        <!-- SWAGGER generation -->
-        <hostname>localhost</hostname>
-        <port>8080</port>
         
-        <!-- Database init properties -->
-        <db.changeLogFile>changelog/db-changelog-master.xml</db.changeLogFile>
-        <db.driver>org.postgresql.Driver</db.driver>
-        <db.url>jdbc:postgresql://localhost:5432/db71u</db.url>
-        <db.user>user</db.user>
-        <db.passwd>password</db.passwd>
-        <db.defaultSchema>schema</db.defaultSchema>
-        <db.outputFile>changelog/generatedChangelog.xml</db.outputFile>
-		
     </properties>
     
     <modules>

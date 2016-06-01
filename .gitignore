@@ -16,3 +16,7 @@ hs_err_pid*
 /Application/src/main/webapp/apidocs
 /Application/src/main/resources/logging.properties
 /Database/target/
+/.idea
+/Application/application.iml
+/Database/database.iml
+/*.iml
