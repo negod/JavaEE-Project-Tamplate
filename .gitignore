@@ -20,3 +20,4 @@ hs_err_pid*
 /Application/application.iml
 /Database/database.iml
 /*.iml
+/Web/nbproject/private/

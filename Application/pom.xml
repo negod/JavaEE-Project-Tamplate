@@ -257,7 +257,8 @@
         <plugins>
             
             <!-- WAR PLUGIN -->
-            <!-- Dynamicly set params in *.xml in WEB-INF from logging.proprties file-->
+            <!-- Dynamicly set params in *.xml in WEB-INF from logging.proprties file -->
+            <!-- Profile "generate-properties" must have run before this works -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>

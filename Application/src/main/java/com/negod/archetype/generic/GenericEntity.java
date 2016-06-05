@@ -22,10 +22,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import org.hibernate.search.annotations.Field;
 
 /**
@@ -35,10 +32,7 @@ import org.hibernate.search.annotations.Field;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
-@ToString(doNotUseGetters = true)
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 public class GenericEntity implements Serializable {
 
     @Id
