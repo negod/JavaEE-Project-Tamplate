@@ -1,0 +1,29 @@
+<div ng-controller="AccountlistCtrl"> 
+
+    <p>{{error}}</p>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading"><h4>Accounts</h4></div>
+        <div class="panel-body">
+            <table class="table">
+                <thead>
+                <th>Name</th>
+                <th>Id</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="account in accounts">
+                        <td>{{account.name}}</td>
+                        <td>{{account.id}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="panel-footer">Panel footer</div>
+    </div>
+
+</div>
+
+<div ng-controller="AccountCtrl">
+    <div>Name: {{account.name}} </div>
+    <div>Id:   {{account.id}}   </div>
+</div>
