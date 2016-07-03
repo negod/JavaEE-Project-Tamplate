@@ -1,0 +1,15 @@
+<div ng-controller="MessageCtrl">
+
+    <div ng-show="error !== undefined" class="alert alert-danger" role="alert">
+        <a href="#" class="alert-link">{{error}}</a>
+    </div>
+
+    <div ng-show="success !== undefined" class="alert alert-success" role="alert">
+        <a href="#" class="alert-link">{{success}}</a>
+    </div>
+
+    <div ng-show="info !== undefined" class="alert alert-info" role="alert">
+        <a href="#" class="alert-link">{{info}}</a>
+    </div>
+
+</div>

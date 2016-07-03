@@ -26,7 +26,7 @@ angular
       })
       .when('/account', {
         templateUrl: 'views/account.html',
-        controller: 'AccountCtrl',
+        controller: 'AccountListCtrl',
         controllerAs: 'account'
       })
       .otherwise({

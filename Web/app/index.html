@@ -13,6 +13,7 @@
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/account.css">
         <!-- endbuild -->
     </head>
     <body ng-app="webApp">
@@ -41,14 +42,17 @@
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="#/account">Account</a></li>
                             <li><a ng-href="#/about">About</a></li>
+                            <li><a ng-href="#/modal/accountModal">DEV</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
+            <div ng-include="'views/message/message.html'"/>
         </div>
 
+
         <div class="container">
-            <div ng-view=""></div>
+            <div ng-view=""/>
         </div>
 
         <div class="footer">
@@ -75,10 +79,16 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
+        <!-- SERVICES -->
+        <script src="scripts/service/constantService.js"></script>
+        <script src="scripts/service/accountService.js"></script>
+        <script src="scripts/service/messageService.js"></script>
+        <!-- CONTROLLERS -->
         <script src="scripts/controllers/about.js"></script>
-        <script src="scripts/controllers/account.js"></script>
-        <script src="scripts/controllers/accountlist.js"></script>
-        <!-- endbuild -->
-    </body>
+        <script src="scripts/controllers/account/accountCreateCtrl.js"></script>
+        <script src="scripts/controllers/account/accountlistCtrl.js"></script>
+        <script src="scripts/controllers/message/messageCtrl.js"></script>
+
+    <!-- endbuild -->
+</body>
 </html>
