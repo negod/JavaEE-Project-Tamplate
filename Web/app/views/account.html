@@ -9,7 +9,7 @@
         <!--div ng-class="{error: error !== undefined, panel-heading: error === undefined }" id="accountList-panel-heading"-->
         <div class="panel-heading" id="accountList-panel-heading">
 
-            <button ng-show="error === undefined" ng-click="showModal()" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
+            <button ng-show="error === undefined" ng-click="showModal('lg')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
                 <span class="glyphicon glyphicon-plus">/<span>
                         </button>
                         <h4 id="panelHeader">Accounts</h4>
@@ -26,7 +26,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="account in accounts | orderBy:'name'">
+                                    <tr ng-repeat="account in accounts| orderBy:'name'">
                                         <td>{{account.name}}</td>
                                         <td>{{account.id}}</td>
                                         <td>{{account.updatedDate| date:'yyyy-MM-dd HH:mm' }}</td>

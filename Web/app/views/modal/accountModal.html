@@ -1,18 +1,5 @@
-<div ng-controller="CreateAccountCtrl">
-    <div class="modal-header">
-        <h3 class="modal-title">Create Account</h3>
-    </div>
+<div ng-controller="CreateAccountModalCtrl">
 
-    <input type="search" placeholder="Account name" ng-model="name"/>
-    <input type="submit" value="search" />
+    <div ng-include="'views/account/createAccount.html'"/>
 
-    <label>Message:<input type="text" ng-model="name" /></label>         
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-    </div>
 </div>
-
-
-
-
