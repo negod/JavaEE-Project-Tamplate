@@ -50,15 +50,14 @@
     </properties>
     
     <dependencies>
+        
         <!-- JPA provider -->
-       
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.core.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
@@ -124,6 +123,7 @@
             <version>${logback.version}</version>
             <scope>compile</scope>
         </dependency>
+        
         <!-- Automatic generation of getters, setters, toString etc -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -144,6 +144,7 @@
         </profile>
         
         <!-- DEPLOY TO WILDFLY APPSERVER -->
+        <!-- mvn -Pwildfly:deploy -Dhostname=localhost -Dport=10000 -Dpassword=admin -Dusername=admin -->
         <profile>
             <id>wildfly-deploy</id>
             <build>
@@ -166,7 +167,8 @@
             </build>
         </profile>  
         
-        <!-- GENERATE HIBERNATE JPA MODEL FOR CRITERIA QUERIES FROM ENTITITES -->
+        <!-- GENERATE HIBERNATE JPA MODEL FOR CRITERIA QUERIES FROM ENTITITES ( Use maven command below ) -->
+        <!-- mvn clean install -Pgenerate-jpa-mode -->
         <profile>
             <id>generate-jpa-model</id>
             <build>
@@ -189,6 +191,7 @@
         </profile>
         
         <!-- GENERATE PROPERTIES FILE USED FOR LOGGBACK (logging.properties)-->
+        <!-- mvn clean install -Pgenerate-properties -->
         <profile>
             <id>generate-properties</id>
             <build>
@@ -214,6 +217,8 @@
         </profile>  
         
         <!-- GENERATE SWAGGER REST API DOCUMENTATION -->
+        <!-- mvn clean install -Pgenerate-swagger -Dswagger.hostname=localhost -Dswagger.port=8080 -->
+        <!-- mvn clean install -Pgenerate-swagger -->
         <profile>
             <id>generate-swagger</id>
             <build>
@@ -328,17 +333,4 @@
         
     </build>
     
-    <distributionManagement>
-        <repository>
-            <id>uvms-releases</id>
-            <name>UnionVms Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>uvms-snapshots</id>
-            <name>UnionVms Snapshot Repository</name>
-            <url>http://nexus.focus.fish/nexus/content/repositories/snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 </project>
