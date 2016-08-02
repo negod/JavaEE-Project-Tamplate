@@ -8,7 +8,7 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('CreateAccountCtrl', function ($scope, $accountService, $uibModal, messageService) {
+        .controller('CreateAccountCtrl', function ($scope, $accountService, messageService) {
 
             var initAccount = function () {
                 $scope.account = {

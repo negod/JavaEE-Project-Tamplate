@@ -8,7 +8,11 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('CreateAccountModalCtrl', function ($scope, $accountService, $uibModal, $log, messageService) {
+        .controller('CreateAccountModalCtrl', function ($scope, $accountService, messageService, $log) {
+
+            $scope.selections = {
+                addMore: true
+            }
 
             var initAccount = function () {
                 $scope.account = {
@@ -20,20 +24,31 @@ angular.module('webApp')
 
             $scope.save = function () {
 
-                var onError = function (reason) {
+                var onError = function () {
                     messageService.error("Failed to save acocunt");
                 };
 
-                var onSuccess = function (response, data) {
-                    $log.info(response);
+                var onSuccess = function () {
                     initAccount();
-                    $accountService.accounts.add(response);
-                    messageService.success("Account saved");
+
+                    $log.info($scope.addMore);
+
+                    if (!$scope.selections.addMore) {
+                        $scope.cancel();
+                    }
+
                 };
 
                 $accountService.create($scope.account).then(onSuccess, onError);
 
+
+
             };
+
+            $scope.cancel = function () {
+                $scope.$dismiss('cancel');
+            };
+
 
         });
 

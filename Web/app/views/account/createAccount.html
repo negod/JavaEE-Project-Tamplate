@@ -6,11 +6,21 @@
         <h3 class="modal-title">Create Account</h3>
     </div>
 
-    <input name="name" required class="input-group" type="text" ng-model="account.name" placeholder="Accountname"/>         
+    <input name="name" required class="input-group" type="text" ng-model="account.name" placeholder="Accountname" autofocus/>         
 
     <div class="modal-footer">
-        <button class="btn btn-primary" type="submit">Save</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        <section>
+            <div class="checkbox" id="leftCheckbox">
+                <label>
+                    <input type="checkbox" ng-model="selections.addMore" />
+                    Add more
+                </label>
+            </div>
+            <div class="right" id="rightButtons">
+                <button class="btn btn-primary" type="submit">Save</button>
+                <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            </div>
+        </section>
     </div>
 
 </form>

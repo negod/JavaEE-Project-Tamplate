@@ -10,7 +10,7 @@
 angular.module('webApp')
         .controller('AccountListCtrl', function ($scope, $accountService, $uibModal, $log) {
 
-            $scope.accounts = $accountService.accounts.list;
+            $scope.accounts = $accountService.getAll();
 
             $scope.showModal = function (size) {
 
@@ -27,7 +27,7 @@ angular.module('webApp')
                 });
 
                 modalInstance.result.then(function () {
-                    accounts = $accountService.accounts.list;
+                    accounts = $accountService.accounts;
                 }, function () {
                     $log.info('Modal dismissed at: ' + new Date());
                 });

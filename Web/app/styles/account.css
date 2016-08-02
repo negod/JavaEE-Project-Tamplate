@@ -45,3 +45,15 @@ and open the template in the editor.
     height: 24px;
 }
 
+section {
+    width: 95%;
+}
+div#leftCheckbox {
+    width: 15%;
+    float: left;
+}
+div#rightButtons {
+    width: 15;
+    float: right;
+}
+
