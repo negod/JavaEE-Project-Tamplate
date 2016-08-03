@@ -1,26 +1,54 @@
 'use strict';
 
 angular.module('webApp')
-        .factory('$accountService', function ($constantService, $http, $log) {
+        .factory('$accountService', function ($constantService, $http, messageService) {
 
             var accounts = [];
 
+            //Callbacks
             var onError = function (data) {
-                $log.error("Failed to get list of accounts");
+                messageService.error("Failed to get list of accounts");
             };
 
             var onSuccess = function (data) {
                 angular.copy(data, accounts);
             };
 
+            var onDeleteSucces = function (data) {
+                var index = accounts.indexOf(data);
+                accounts.splice(index, 1);
+                messageService.success("Account deleted");
+            };
+
+            var onDeleteError = function (data) {
+                messageService.error("Failed to delete Account");
+            };
+
+            var onCreateSucces = function (response) {
+                accounts.push(response.data);
+                messageService.success("Account created");
+            };
+
+            var onCreateError = function (response) {
+                messageService.error("Failed to create Account");
+            };
+
+
             var getAccounts = function () {
                 return accounts;
-            }
+            };
 
+            //Methods
             var createAccount = function (account) {
                 return $http.post($constantService.baseUrl + "/account", account).then(function (response) {
                     accounts.push(response.data);
                 });
+            };
+
+            var deleteAccount = function (account) {
+                return $http.delete($constantService.baseUrl + "/account/" + account.id).then(function (response) {
+                    return response;
+                }).then(onDeleteSucces(account), onDeleteError);
             };
 
             var getAccoutsFromWS = function () {
@@ -33,7 +61,8 @@ angular.module('webApp')
 
             return {
                 getAll: getAccounts,
-                create: createAccount
+                create: createAccount,
+                delete: deleteAccount
             };
 
         });

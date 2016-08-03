@@ -31,17 +31,15 @@ angular.module('webApp')
                 var onSuccess = function () {
                     initAccount();
 
-                    $log.info($scope.addMore);
-
                     if (!$scope.selections.addMore) {
                         $scope.cancel();
                     }
 
+                    messageService.success("Acocunt created");
+
                 };
 
                 $accountService.create($scope.account).then(onSuccess, onError);
-
-
 
             };
 

@@ -12,6 +12,10 @@ angular.module('webApp')
 
             $scope.accounts = $accountService.getAll();
 
+            $scope.deleteAccount = function (account) {
+                $accountService.delete(account);
+            };
+
             $scope.showModal = function (size) {
 
                 var modalInstance = $uibModal.open({
@@ -27,9 +31,8 @@ angular.module('webApp')
                 });
 
                 modalInstance.result.then(function () {
-                    accounts = $accountService.accounts;
                 }, function () {
-                    $log.info('Modal dismissed at: ' + new Date());
+                    //$log.info('Modal dismissed at: ' + new Date());
                 });
             };
 
