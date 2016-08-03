@@ -12,6 +12,7 @@ import java.util.Optional;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -38,7 +39,7 @@ public class AccountService {
     /**
      *
      * @param id
-     * @return
+     * @return The requested account
      * @responseType com.negod.archetype.entity.Account
      *
      * @responseMessage 200 Account successfully retrieved
@@ -76,7 +77,7 @@ public class AccountService {
      * @summary Get all accounts
      *
      *
-     * @return
+     * @return All accounts
      */
     @GET
     @Path("/")
@@ -101,7 +102,7 @@ public class AccountService {
     /**
      *
      * @param account
-     * @return
+     * @return The created account
      *
      * @responseType com.negod.archetype.entity.Account
      *
@@ -126,6 +127,38 @@ public class AccountService {
         } catch (Exception e) {
             log.error("Error when creating account {}", account.toString(), e);
             return Response.serverError().build();
+        }
+    }
+
+    /**
+     *
+     * @param account
+     * @return true or false dependent on the success of the deletion
+     *
+     * @responseType
+     *
+     * @responseMessage 200 Acocunt successfully deleted
+     * @responseMessage 500 Error when deleting account
+     *
+     * @summary Deletes an account
+     *
+     */
+    @DELETE
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Path("/{id}")
+    public void delete(@PathParam("id") String id) {
+        log.debug("Deleting account with ID {}", id);
+        try {
+            Boolean success = accountDao.delete(id);
+            if (success) {
+                //return Response.ok(id, MediaType.APPLICATION_JSON).build();
+            } else {
+                //return Response.status(1000).build();
+            }
+        } catch (Exception e) {
+            log.error("Error when deleting account with id {}", id, e);
+            //return Response.serverError().build();
         }
     }
 

@@ -10,6 +10,8 @@ import com.negod.archetype.entity.Account;
 import com.negod.archetype.boundary.exception.DaoException;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -19,13 +21,10 @@ import javax.ejb.Stateless;
 @Stateless
 public class AccountDao extends GenericDao<Account> {
 
+    Logger log = LoggerFactory.getLogger(AccountDao.class);
+
     public AccountDao() throws DaoException {
         super(Account.class);
-    }
-
-    @Override
-    public Boolean delete(String externalId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

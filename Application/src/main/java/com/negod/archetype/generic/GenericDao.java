@@ -32,7 +32,7 @@ public abstract class GenericDao<T extends GenericEntity> {
     private final Class<T> entityClass;
 
     public GenericDao(Class entityClass) throws DaoException {
-        log.debug("Instantiating GenericDao for entity class " + entityClass.getSimpleName());
+        log.trace("Instantiating GenericDao for entity class {} ", entityClass.getSimpleName());
         if (entityClass == null) {
             log.error("Entity class cannot be null in constructor when instantiating GenericDao");
             throw new DaoException("Entity class cannot be null in constructor when instantiating GenericDao");
@@ -47,7 +47,7 @@ public abstract class GenericDao<T extends GenericEntity> {
      * @throws DaoException
      */
     private Optional<CriteriaQuery<T>> getCriteriaQuery() throws DaoException {
-        log.debug("Getting criteria query for " + entityClass.getSimpleName());
+        log.trace("Getting criteria query for {}", entityClass.getSimpleName());
         try {
             CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
             return Optional.ofNullable(criteriaBuilder.createQuery(entityClass));
@@ -93,23 +93,44 @@ public abstract class GenericDao<T extends GenericEntity> {
         }
     }
 
-    public abstract Boolean delete(String externalId);
+    /**
+     *
+     * @param externalId
+     * @return true or false depenent on the success of the deletion
+     */
+    public Boolean delete(String externalId) {
+        try {
+            Optional<T> entity = getById(externalId);
+            if (entity.isPresent()) {
+                return delete(entity.get());
+            } else {
+                log.error("No entity of type: {} found with id: {}", entityClass.getSimpleName(), externalId);
+            }
+        } catch (DaoException ex) {
+            log.error("Error when deleting entity of type: {} with id: {}. ErrorMessage: {}", entityClass.getSimpleName(), externalId, ex.getMessage());
+        }
+        return Boolean.FALSE;
+
+    }
 
     /**
      *
      * Deletes the selected Entity
      *
      * @param entity The entity to delete
+     * @return true or false depenent on the success of the deletion
      * @throws DaoException
      */
-    protected void delete(T entity) throws DaoException {
+    public Boolean delete(T entity) throws DaoException {
         log.debug("Deleting entity of type {} with values {} ", entityClass.getSimpleName(), entity.toString());
         try {
             em.remove(entity);
+            return Boolean.TRUE;
         } catch (Exception e) {
             log.error("Error when deleting entity in Generic Dao");
             throw new DaoException("Error when deleting entity ", e);
         }
+
     }
 
     /**
@@ -177,7 +198,7 @@ public abstract class GenericDao<T extends GenericEntity> {
      * @throws DaoException
      */
     protected Optional<T> get(CriteriaQuery<T> query) throws DaoException {
-        log.debug("Getting object of type {}", entityClass.getSimpleName());
+        log.trace("Getting object of type {}", entityClass.getSimpleName());
         try {
             TypedQuery<T> typedQuery = em.createQuery(query);
             return executeTypedQuery(typedQuery);
@@ -214,7 +235,7 @@ public abstract class GenericDao<T extends GenericEntity> {
      * @throws DaoException
      */
     protected Optional<List<T>> executeTypedQueryList(TypedQuery<T> query) throws DaoException {
-        log.debug("Executing list query for type {} with query: [ {} ]", entityClass.getSimpleName(), query.unwrap(org.hibernate.Query.class).getQueryString());
+        log.trace("Executing list query for type {} with query: [ {} ]", entityClass.getSimpleName(), query.unwrap(org.hibernate.Query.class).getQueryString());
         try {
             List<T> resultList = query.getResultList();
             return Optional.ofNullable(resultList);
@@ -233,7 +254,7 @@ public abstract class GenericDao<T extends GenericEntity> {
      * @throws DaoException
      */
     protected Optional<T> executeTypedQuery(TypedQuery<T> query) throws DaoException {
-        log.debug("Executing query for type {} with query: [ {} ]", entityClass.getSimpleName(), query.unwrap(org.hibernate.Query.class).getQueryString());
+        log.trace("Executing query for type {} with query: [ {} ]", entityClass.getSimpleName(), query.unwrap(org.hibernate.Query.class).getQueryString());
         try {
             T result = query.getSingleResult();
             return Optional.ofNullable(result);
