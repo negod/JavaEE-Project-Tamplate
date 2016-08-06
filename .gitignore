@@ -13,3 +13,4 @@ node_modules
 /Database/*.iml
 /Web/nbproject/private
 /Web/nbproject/project.properties
+/Web/nbproject
