@@ -8,9 +8,18 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('AccountListCtrl', function ($scope, $accountService, $uibModal, $log) {
+        .controller('AccountListCtrl', function ($scope, $accountService, $constantService, $uibModal, $log) {
 
             $scope.accounts = $accountService.getAll();
+            $scope.initListSize = $constantService.defaultListFetchSize;
+            $scope.currentListSize = $scope.initListSize;
+
+
+            $scope.getMore = function () {
+                if ($scope.initListSize === $scope.accounts.length) {
+                    $accountService.getList($scope.currentListSize += $scope.initListSize);
+                }
+            };
 
             $scope.deleteAccount = function (account) {
                 $accountService.delete(account);

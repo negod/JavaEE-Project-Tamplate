@@ -67,20 +67,21 @@ angular.module('webApp')
                 }).then(onDeleteSucces(account), onDeleteError);
             };
 
-            var getAccoutsFromWS = function () {
-                return $http.get($constantService.baseUrl + "/account").then(function (response) {
+            var getAccoutsFromWS = function (listSize) {
+                return $http.get($constantService.baseUrl + "/account/" + listSize).then(function (response) {
                     return response.data;
                 }).then(onSuccess, onError);
             }
 
-            getAccoutsFromWS();
+            getAccoutsFromWS($constantService.defaultListFetchSize);
 
             return {
                 getEmpty: getEmptyAccount,
                 getAll: getAccounts,
+                getList : getAccoutsFromWS,
                 create: createAccount,
                 delete: deleteAccount,
-                update: updateAccount
+                update: updateAccount                
             };
 
         });
