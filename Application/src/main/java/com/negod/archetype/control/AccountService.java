@@ -15,6 +15,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -133,8 +134,37 @@ public class AccountService {
     /**
      *
      * @param account
-     * @return true or false dependent on the success of the deletion
+     * @return The created account
      *
+     * @responseType com.negod.archetype.entity.Account
+     *
+     * @responseMessage 200 Acocunt successfully updated
+     * @responseMessage 500 Error when updating account
+     *
+     * @summary Updates an Account
+     *
+     */
+    @PUT
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response update(Account account) {
+        log.debug("Updating account {}", account.toString());
+        try {
+            Optional<Account> accountById = accountDao.update(account);
+            if (accountById.isPresent()) {
+                return Response.ok(accountById.get(), MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.serverError().build();
+            }
+        } catch (Exception e) {
+            log.error("Error when updating account {}", account.toString(), e);
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     *
+     * @param id
      * @responseType
      *
      * @responseMessage 200 Acocunt successfully deleted
@@ -150,15 +180,9 @@ public class AccountService {
     public void delete(@PathParam("id") String id) {
         log.debug("Deleting account with ID {}", id);
         try {
-            Boolean success = accountDao.delete(id);
-            if (success) {
-                //return Response.ok(id, MediaType.APPLICATION_JSON).build();
-            } else {
-                //return Response.status(1000).build();
-            }
+            accountDao.delete(id);
         } catch (Exception e) {
             log.error("Error when deleting account with id {}", id, e);
-            //return Response.serverError().build();
         }
     }
 

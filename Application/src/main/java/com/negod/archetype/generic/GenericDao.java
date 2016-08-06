@@ -84,8 +84,16 @@ public abstract class GenericDao<T extends GenericEntity> {
      * @throws DaoException
      */
     public Optional<T> update(T entity) throws DaoException {
-        log.debug("Updating entity of type {} with values {} ", entityClass.getSimpleName(), entity.toString());
         try {
+            Optional<T> entityToUpdate = getById(entity.getId());
+            
+            if (entityToUpdate.isPresent()) {
+                log.debug("Updating entity of type {} with values {} ", entityClass.getSimpleName(), entity.toString());
+                entity.setInternalId(entityToUpdate.get().getInternalId());
+            } else {
+                return Optional.empty();
+            }
+
             return Optional.ofNullable(em.merge(entity));
         } catch (Exception e) {
             log.error("Error when updating entity in Generic Dao");
