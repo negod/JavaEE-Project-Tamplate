@@ -16,16 +16,17 @@ angular.module('webApp')
                 $accountService.delete(account);
             };
 
-            $scope.showModal = function (size) {
+            $scope.showModal = function (size, account) {
 
                 var modalInstance = $uibModal.open({
                     animation: $scope.animationsEnabled,
-                    templateUrl: '/views/modal/accountModal.html',
-                    controller: 'CreateAccountModalCtrl',
+                    templateUrl: 'views/account/createAccount.html',
+                    controller: 'CreateAccountCtrl',
+                    backdrop: 'static',
                     size: size,
                     resolve: {
-                        accounts: function () {
-                            return $scope.accounts;
+                        account: function () {
+                            return account;
                         }
                     }
                 });

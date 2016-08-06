@@ -5,6 +5,15 @@ angular.module('webApp')
 
             var accounts = [];
 
+            var getEmptyAccount = function () {
+
+                var account = {
+                    name: ""
+                };
+
+                return account;
+            };
+
             //Callbacks
             var onError = function (data) {
                 messageService.error("Failed to get list of accounts");
@@ -45,6 +54,12 @@ angular.module('webApp')
                 });
             };
 
+            var updateAccount = function (account) {
+                return $http.put($constantService.baseUrl + "/account", account).then(function (response) {
+                    //accounts.push(response.data);
+                });
+            };
+
             var deleteAccount = function (account) {
                 return $http.delete($constantService.baseUrl + "/account/" + account.id).then(function (response) {
                     return response;
@@ -60,9 +75,11 @@ angular.module('webApp')
             getAccoutsFromWS();
 
             return {
+                getEmpty: getEmptyAccount,
                 getAll: getAccounts,
                 create: createAccount,
-                delete: deleteAccount
+                delete: deleteAccount,
+                update: updateAccount
             };
 
         });

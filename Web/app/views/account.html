@@ -8,7 +8,7 @@
 
         <div class="panel-heading" id="accountList-panel-heading">
 
-            <button ng-show="error === undefined" ng-click="showModal('lg')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
+            <button ng-show="error === undefined" ng-click="showModal('md')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
                 <span class="glyphicon glyphicon-plus"/>
             </button>
             <h4 id="panelHeader">Accounts</h4>
@@ -30,7 +30,7 @@
                         <td>{{account.id}}</td>
                         <td>{{account.updatedDate| date:'yyyy-MM-dd HH:mm' }}</td>
                         <td>
-                            <button ng-click="showModal()" id="addButton" type="button" class="btn btn-sm btn-default btn-round">
+                            <button ng-click="showModal('md', account)" id="addButton" type="button" class="btn btn-sm btn-default btn-round">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
                             <button confirm='Are you sure?' ng-click="deleteAccount(account)" id="addButton" type="button" class="btn btn-sm btn-default btn-round">

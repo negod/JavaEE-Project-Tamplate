@@ -2,7 +2,7 @@
 
 //Service that handles generic messages from all controllers
 angular.module('webApp')
-        .factory('messageService', function ($rootScope, $log) {
+        .factory('messageService', function ($rootScope) {
 
             //Subscribe to be able to recieve ERROR messages
             var error = function (scope, callback) {

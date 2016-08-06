@@ -19,5 +19,5 @@ angular.module('webApp')
                         ConfirmService.open(attrs.confirm, scope.eventHandler);
                     });
                 }
-            }
+            };
         });
