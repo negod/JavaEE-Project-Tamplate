@@ -6,6 +6,7 @@
 package com.negod.archetype.generic;
 
 import com.negod.archetype.boundary.exception.DaoException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
@@ -23,14 +24,14 @@ import org.slf4j.LoggerFactory;
  * @param <T> The entity to handle
  */
 public abstract class GenericDao<T extends GenericEntity> {
-
+    
     Logger log = LoggerFactory.getLogger(GenericDao.class);
-
+    
     @PersistenceContext(unitName = "persistancePU")
     private EntityManager em;
-
+    
     private final Class<T> entityClass;
-
+    
     public GenericDao(Class entityClass) throws DaoException {
         log.trace("Instantiating GenericDao for entity class {} ", entityClass.getSimpleName());
         if (entityClass == null) {
@@ -89,11 +90,13 @@ public abstract class GenericDao<T extends GenericEntity> {
             
             if (entityToUpdate.isPresent()) {
                 log.debug("Updating entity of type {} with values {} ", entityClass.getSimpleName(), entity.toString());
+                em.detach(entityToUpdate.get());
                 entity.setInternalId(entityToUpdate.get().getInternalId());
+                entity.setUpdatedDate(new Date());
             } else {
                 return Optional.empty();
             }
-
+            
             return Optional.ofNullable(em.merge(entity));
         } catch (Exception e) {
             log.error("Error when updating entity in Generic Dao");
@@ -118,7 +121,7 @@ public abstract class GenericDao<T extends GenericEntity> {
             log.error("Error when deleting entity of type: {} with id: {}. ErrorMessage: {}", entityClass.getSimpleName(), externalId, ex.getMessage());
         }
         return Boolean.FALSE;
-
+        
     }
 
     /**
@@ -138,7 +141,7 @@ public abstract class GenericDao<T extends GenericEntity> {
             log.error("Error when deleting entity in Generic Dao");
             throw new DaoException("Error when deleting entity ", e);
         }
-
+        
     }
 
     /**
@@ -151,9 +154,9 @@ public abstract class GenericDao<T extends GenericEntity> {
     public Optional<T> getById(String id) throws DaoException {
         log.debug("Getting entity of type {} with id {} ", entityClass.getSimpleName(), id);
         try {
-
+            
             Optional<CriteriaQuery<T>> data = this.getCriteriaQuery();
-
+            
             if (data.isPresent()) {
                 CriteriaQuery<T> cq = data.get();
                 Root<T> entity = cq.from(entityClass);
@@ -162,7 +165,7 @@ public abstract class GenericDao<T extends GenericEntity> {
             } else {
                 return Optional.empty();
             }
-
+            
         } catch (Exception e) {
             log.error("Error when getting entity by id: {} in Generic Dao", id);
             throw new DaoException("Error when getting entity by id ", e);
@@ -179,9 +182,9 @@ public abstract class GenericDao<T extends GenericEntity> {
     public Optional<List<T>> getAll() throws DaoException {
         log.debug("Getting all values of type {} ", entityClass.getSimpleName());
         try {
-
+            
             Optional<CriteriaQuery<T>> data = this.getCriteriaQuery();
-
+            
             if (data.isPresent()) {
                 CriteriaQuery<T> cq = data.get();
                 Root<T> rootEntity = cq.from(entityClass);
@@ -190,7 +193,7 @@ public abstract class GenericDao<T extends GenericEntity> {
             } else {
                 return Optional.empty();
             }
-
+            
         } catch (Exception e) {
             log.error("Error when getting all in Generic Dao");
             throw new DaoException("Error when getting entity by id ", e);
@@ -271,5 +274,5 @@ public abstract class GenericDao<T extends GenericEntity> {
             throw new DaoException("Error when gettting entity list " + entityClass.getSimpleName(), e);
         }
     }
-
+    
 }
