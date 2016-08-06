@@ -81,13 +81,13 @@ public class AccountService {
      * @return All accounts
      */
     @GET
-    @Path("/")
+    @Path("/{listSize}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccounts() {
+    public Response getAccounts(@PathParam("listSize") Integer listSize) {
         log.debug("Getting all accounts");
         try {
-            Optional<List<Account>> accountList = accountDao.getAll();
+            Optional<List<Account>> accountList = accountDao.getAll(listSize);
             if (accountList.isPresent()) {
                 List<Account> accountById = accountList.get();
                 return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
