@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('webApp')
-        .factory('$accountService', function ($constantService, $http, messageService) {
+        .factory('$accountService', function ($constantService, $http, messageService, $log) {
 
             var accounts = [];
 
@@ -56,7 +56,8 @@ angular.module('webApp')
 
             var updateAccount = function (account) {
                 return $http.put($constantService.baseUrl + "/account", account).then(function (response) {
-                    //accounts.push(response.data);
+                    var index = accounts.indexOf(account);
+                    accounts[index] = response.data;
                 });
             };
 

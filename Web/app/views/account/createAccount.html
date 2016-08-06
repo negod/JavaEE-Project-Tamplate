@@ -3,10 +3,22 @@
     <div ng-include="'views/message/message.html'"/>
 
     <div class="modal-header">
-        <h3 class="modal-title">Create Account</h3>
+        <h3 class="modal-title">{{selections.text}}</h3>
     </div>
 
-    <input name="name" required class="input-group" type="text" ng-model="account.name" placeholder="Accountname" autofocus/>         
+    <div class="form-group">
+        <div>
+            <label class="form-control-static">Accountame:</label>
+            <input name="name" 
+                   required class="form-control" 
+                   type="text" 
+                   ng-model="account.name" 
+                   placeholder="Accountname" 
+                   autofocus
+                   popover-trigger="'focus'"
+                   title="The name of the account"/>                     
+        </div>
+    </div>
 
     <div class="modal-footer">
         <section>

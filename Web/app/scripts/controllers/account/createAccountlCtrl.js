@@ -12,14 +12,15 @@ angular.module('webApp')
 
             $scope.selections = {
                 addMore: true,
-                edit: account !== undefined ? true : false
+                edit: account !== undefined ? true : false,
+                text: account !== undefined ? "Edit Account" : "Create new Account"
             };
 
             if ($scope.selections.edit === false) {
                 $scope.account = $accountService.getEmpty();
             } else {
                 $scope.account = account;
-                $scope.oldAccount = angular.copy(account, $scope.oldAccount);
+                $scope.oldAccount = angular.copy(account);
             }
 
             $scope.save = function () {
@@ -56,7 +57,7 @@ angular.module('webApp')
             $scope.cancel = function () {
 
                 if ($scope.selections.edit === true) {
-                    account = angular.copy($scope.oldAccount, account);
+                    account = angular.copy($scope.oldAccount);
                 }
 
                 $scope.$dismiss('cancel');
