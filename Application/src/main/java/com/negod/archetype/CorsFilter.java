@@ -1,5 +1,4 @@
 
-import com.negod.archetype.control.AccountService;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

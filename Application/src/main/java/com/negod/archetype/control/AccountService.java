@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.negod.archetype.control;
 
 import com.negod.archetype.boundary.AccountDao;
 import com.negod.archetype.entity.Account;
-import java.util.List;
-import java.util.Optional;
+import com.negod.archetype.generic.GenericDao;
+import com.negod.archetype.generic.GenericRestService;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -21,8 +16,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,160 +23,103 @@ import org.slf4j.LoggerFactory;
  */
 @Path("/account")
 @Stateless
-public class AccountService {
-
-    Logger log = LoggerFactory.getLogger(AccountService.class);
+public class AccountService extends GenericRestService<Account> {
 
     @EJB
     AccountDao accountDao;
 
     /**
+     * {@inheritDoc}
      *
-     * @param id
-     * @return The requested account
+     */
+    @Override
+    public GenericDao getDao() {
+        return accountDao;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
      * @responseType com.negod.archetype.entity.Account
-     *
-     * @responseMessage 200 Account successfully retrieved
-     * @responseMessage 500 Error when retrieving the account
-     *
-     * @summary Gets a account by its id
-     *
-     *
      */
     @GET
     @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccountById(@PathParam("id") String id) {
-        log.debug("Getting account by id: {}", id);
-        try {
-            Optional<Account> account = accountDao.getById(id);
-            if (account.isPresent()) {
-                return Response.ok(account.get(), MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.noContent().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when getting account by ID {}", id, e);
-            return Response.serverError().build();
-        }
+    @Override
+    public Response getEntityById(@PathParam("id") String id) {
+        return super.getById(id);
     }
 
     /**
+     * {@inheritDoc}
+     *
      * @responseType java.util.List<com.negod.archetype.entity.Account>
-     *
-     * @responseMessage 200 Account successfully retrieved
-     * @responseMessage 500 Error when retrieving the account
-     *
-     * @summary Get all accounts
-     *
-     *
-     * @return All accounts
      */
     @GET
-    @Path("/{listSize}")
+    @Path("/list/{listSize}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response getAccounts(@PathParam("listSize") Integer listSize) {
-        log.debug("Getting all accounts");
-        try {
-            Optional<List<Account>> accountList = accountDao.getAll(listSize);
-            if (accountList.isPresent()) {
-                List<Account> accountById = accountList.get();
-                return Response.ok(accountById, MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.noContent().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when getting accounts {}", e);
-            return Response.serverError().build();
-        }
+    @Override
+    public Response getFilteredEntityList(@PathParam("listSize") Integer listSize) {
+        return super.getFilteredList(listSize);
     }
 
     /**
+     * {@inheritDoc}
      *
-     * @param account
-     * @return The created account
+     * @responseType java.util.List<com.negod.archetype.entity.Account>
+     */
+    @GET
+    @Path("/")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Override
+    public Response getAllEntities() {
+        return super.getAll();
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * @responseType com.negod.archetype.entity.Account
-     *
-     * @responseMessage 200 Acocunt successfully persisted
-     * @responseMessage 500 Error when persisting account
-     *
-     * @summary Persists a account to database
-     *
+     * @param entity
      */
     @POST
+    @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response create(Account account) {
-        log.debug("Creating account {}", account.toString());
-        try {
-            Optional<Account> accountById = accountDao.persist(account);
-            if (accountById.isPresent()) {
-                return Response.ok(accountById.get(), MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.noContent().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when creating account {}", account.toString(), e);
-            return Response.serverError().build();
-        }
+    @Override
+    public Response createEntity(Account entity) {
+        return super.create(entity);
     }
 
     /**
-     *
-     * @param account
-     * @return The created account
+     * {@inheritDoc}
      *
      * @responseType com.negod.archetype.entity.Account
-     *
-     * @responseMessage 200 Acocunt successfully updated
-     * @responseMessage 500 Error when updating account
-     *
-     * @summary Updates an Account
-     *
+     * @param entity
      */
     @PUT
+    @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
-    public Response update(Account account) {
-        log.debug("Updating account {}", account.toString());
-        try {
-            Optional<Account> accountById = accountDao.update(account);
-            if (accountById.isPresent()) {
-                return Response.ok(accountById.get(), MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.serverError().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when updating account {}", account.toString(), e);
-            return Response.serverError().build();
-        }
+    @Override
+    public Response updateEntity(Account entity) {
+        return super.update(entity);
     }
 
     /**
+     * {@inheritDoc}
      *
      * @param id
-     * @responseType
-     *
-     * @responseMessage 200 Acocunt successfully deleted
-     * @responseMessage 500 Error when deleting account
-     *
-     * @summary Deletes an account
-     *
      */
     @DELETE
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Path("/{id}")
-    public void delete(@PathParam("id") String id) {
-        log.debug("Deleting account with ID {}", id);
-        try {
-            accountDao.delete(id);
-        } catch (Exception e) {
-            log.error("Error when deleting account with id {}", id, e);
-        }
+    @Override
+    public void deleteEntity(@PathParam("id") String id) {
+        super.delete(id);
     }
-
 }
