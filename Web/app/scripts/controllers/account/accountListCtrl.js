@@ -16,7 +16,7 @@ angular.module('webApp')
 
 
             $scope.getMore = function () {
-                if ($scope.initListSize === $scope.accounts.length) {
+                if ($scope.currentListSize === $scope.accounts.length) {
                     $accountService.getList($scope.currentListSize += $scope.initListSize);
                 }
             };
