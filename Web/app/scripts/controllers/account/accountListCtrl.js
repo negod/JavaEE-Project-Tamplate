@@ -8,28 +8,43 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('AccountListCtrl', function ($scope, $accountService, $constantService, $uibModal, $log) {
+        .controller('AccountListCtrl', function ($scope, Account, constantService, $uibModal, $log) {
 
-            $scope.accounts = $accountService.getAll();
-
-            $scope.searchQuery = angular.copy($constantService.searchQuery);
+            $scope.searchQuery = angular.copy(constantService.searchQuery);
             var initListSize = $scope.searchQuery.pagination.listSize;
-            $scope.searchQuery.searchFields = $accountService.searchFields();
+            $scope.searchQuery.searchFields = Account.searchFields();
+
+            $scope.accounts = [];
+
+            $scope.getAccounts = function (query) {
+                Account.list(query).then(
+                        function (response) {
+                            response.forEach(function (entry) {
+                                $scope.accounts.push(entry);
+                            });
+                        }
+                );
+            };
+            $scope.getAccounts($scope.searchQuery);
 
             $scope.getMore = function () {
-                if ($scope.searchQuery.pagination.listSize === $scope.accounts.length) {
-                    $scope.searchQuery.pagination.listSize += initListSize;
-                    $accountService.getList($scope.searchQuery);
+                var listSize = $scope.searchQuery.pagination.listSize;
+                var page = $scope.searchQuery.pagination.page + 1;
+                if ((listSize * page) === $scope.accounts.length) {
+                    $scope.searchQuery.pagination.page += 1;
+                    $scope.getAccounts($scope.searchQuery);
                 }
             };
 
             $scope.search = function () {
-                $accountService.getList($scope.searchQuery);
-                $scope.accounts = $accountService.getAll();
+                $scope.searchQuery.pagination.listSize = initListSize;
+                $scope.searchQuery.pagination.page = 0;
+                $scope.accounts = [];
+                $scope.getAccounts($scope.searchQuery);
             }
 
             $scope.deleteAccount = function (account) {
-                $accountService.delete(account);
+                Account.delete(account);
             };
 
             $scope.showModal = function (size, account) {
