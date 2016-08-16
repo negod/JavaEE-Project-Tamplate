@@ -4,6 +4,7 @@ import com.negod.archetype.boundary.AccountDao;
 import com.negod.archetype.entity.Account;
 import com.negod.archetype.generic.GenericDao;
 import com.negod.archetype.generic.GenericRestService;
+import com.negod.archetype.generic.search.GenericFilter;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
@@ -16,11 +17,13 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author Joakim Johansson ( joakimjohansson@outlook.com )
  */
+@Slf4j
 @Path("/account")
 @Stateless
 public class AccountService extends GenericRestService<Account> {
@@ -56,27 +59,13 @@ public class AccountService extends GenericRestService<Account> {
      *
      * @responseType java.util.List<com.negod.archetype.entity.Account>
      */
-    @GET
-    @Path("/list/{listSize}")
+    @POST
+    @Path("/list")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Override
-    public Response getFilteredEntityList(@PathParam("listSize") Integer listSize) {
-        return super.getFilteredList(listSize);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @responseType java.util.List<com.negod.archetype.entity.Account>
-     */
-    @GET
-    @Path("/")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Override
-    public Response getAllEntities() {
-        return super.getAll();
+    public Response getFilteredEntityList(GenericFilter filter) {
+        return super.getFilteredList(filter);
     }
 
     /**
@@ -122,4 +111,33 @@ public class AccountService extends GenericRestService<Account> {
     public void deleteEntity(@PathParam("id") String id) {
         super.delete(id);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @responseType java.lang.String
+     */
+    @GET
+    @Path("/searchfields")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Override
+    public Response getEntitySearchFields() {
+        return super.getSearchFields();
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @responseType java.lang.Boolean
+     */
+    @GET
+    @Path("/index")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Override
+    public Response indexEntity() {
+        return super.indexEntity();
+    }
+
 }

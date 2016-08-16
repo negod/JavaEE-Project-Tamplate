@@ -1,11 +1,12 @@
 package com.negod.archetype.generic;
 
+import com.negod.archetype.generic.search.GenericFilter;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -14,11 +15,20 @@ import org.slf4j.LoggerFactory;
  * @exclude
  *
  */
+@Slf4j
 public abstract class GenericRestService<T extends GenericEntity> implements RestService<T> {
 
-    Logger log = LoggerFactory.getLogger(GenericRestService.class);
-
     public abstract GenericDao getDao();
+
+    /**
+     * Gets all searchfields available in the entity
+     *
+     * @return
+     */
+    public Response getSearchFields() {
+        Set<String> searchFields = getDao().getSearchFields();
+        return Response.ok(searchFields, MediaType.APPLICATION_JSON).build();
+    }
 
     /**
      * Gets an entity by the external id.
@@ -44,13 +54,13 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
     /**
      * Gets a list of the entity with filtration
      *
-     * @param listSize
+     * @param filter
      * @return
      */
-    public Response getFilteredList(Integer listSize) {
+    public Response getFilteredList(GenericFilter filter) {
         try {
-            log.debug("Getting all " + getDao().getClassName() + " with listSize " + listSize);
-            Optional<List<T>> responseList = getDao().getAll(listSize);
+            log.debug("Getting all " + getDao().getClassName() + " with filter " + filter);
+            Optional<List<T>> responseList = getDao().getAll(filter);
             if (responseList.isPresent()) {
                 List<T> entityList = responseList.get();
                 return Response.ok(entityList, MediaType.APPLICATION_JSON).build();
@@ -59,27 +69,6 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
             }
         } catch (Exception e) {
             log.error("Error when getting filtered list {}", e);
-            return Response.serverError().build();
-        }
-    }
-
-    /**
-     * Gets all entities
-     *
-     * @return
-     */
-    public Response getAll() {
-        log.debug("Getting all " + getDao().getClassName() + "s");
-        try {
-            Optional<List<T>> responseList = getDao().getAll();
-            if (responseList.isPresent()) {
-                List<T> entityList = responseList.get();
-                return Response.ok(entityList, MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.noContent().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when getting " + getDao().getClassName() + "s" + " {}", e);
             return Response.serverError().build();
         }
     }
@@ -138,6 +127,15 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
         } catch (Exception e) {
             log.error("Error when deleting " + getDao().getClassName() + " with id {}", id, e);
         }
+    }
+
+    /**
+     * Creates a Lucene index for the entity
+     *
+     * @return
+     */
+    public Response indexEntity() {
+        return Response.ok(getDao().indexEntity(), MediaType.WILDCARD_TYPE).build();
     }
 
 }

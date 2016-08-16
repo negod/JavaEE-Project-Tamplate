@@ -27,6 +27,7 @@ import org.hibernate.search.annotations.Field;
 @MappedSuperclass
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
+@Data
 public class GenericEntity implements Serializable {
 
     @Id
@@ -56,30 +57,6 @@ public class GenericEntity implements Serializable {
     protected void onCreate() {
         this.updatedDate = new Date();
         this.id = UUID.randomUUID().toString();
-    }
-
-    public Long getInternalId() {
-        return internalId;
-    }
-
-    public void setInternalId(Long internalId) {
-        this.internalId = internalId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Date getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
     }
 
 }

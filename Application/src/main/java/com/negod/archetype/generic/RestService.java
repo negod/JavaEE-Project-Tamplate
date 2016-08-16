@@ -1,5 +1,6 @@
 package com.negod.archetype.generic;
 
+import com.negod.archetype.generic.search.GenericFilter;
 import javax.ws.rs.core.Response;
 
 /**
@@ -8,6 +9,14 @@ import javax.ws.rs.core.Response;
  * @param <T>
  */
 public interface RestService<T extends GenericEntity> {
+
+    /**
+     * @return The entitys searchfields
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Gets all searchable fieldnames
+     */
+    public Response getEntitySearchFields();
 
     /**
      * @param id The external id of the entity
@@ -19,22 +28,13 @@ public interface RestService<T extends GenericEntity> {
     public Response getEntityById(String id);
 
     /**
-     * @param listSize the size of the list
+     * @param filter The filter for the search
      * @return the filtered list
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      * @summary Get all entitites with a fixed listsize
      */
-    public Response getFilteredEntityList(Integer listSize);
-
-    /**
-     * @responseMessage 200 Success
-     * @responseMessage 500 Error
-     * @summary Get all entities
-     * @return All accounts
-     * @summary Get all entitites
-     */
-    public Response getAllEntities();
+    public Response getFilteredEntityList(GenericFilter filter);
 
     /**
      *

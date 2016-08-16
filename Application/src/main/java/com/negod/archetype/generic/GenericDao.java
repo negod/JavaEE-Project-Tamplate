@@ -1,34 +1,46 @@
 package com.negod.archetype.generic;
 
 import com.negod.archetype.boundary.exception.DaoException;
+import com.negod.archetype.generic.search.GenericFilter;
+import com.negod.archetype.generic.search.Pagination;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Root;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.jpa.criteria.OrderImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 
 /**
  *
  * @author Joakim Johansson ( joakimjohansson@outlook.com )
  * @param <T> The entity to handle
  */
+@Slf4j
+@Data
 public class GenericDao<T extends GenericEntity> {
-
-    Logger log = LoggerFactory.getLogger(GenericDao.class);
 
     @PersistenceContext(unitName = "persistancePU")
     private EntityManager em;
 
     private final Class<T> entityClass;
-    private String className = "DAO NOT INITIALIZED YET";
+    private final String className;
+    private final Set<String> searchFields = new HashSet<>();
 
     /**
      * Constructor
@@ -44,11 +56,23 @@ public class GenericDao<T extends GenericEntity> {
         } else {
             this.entityClass = entityClass;
             this.className = entityClass.getSimpleName();
+            this.searchFields.addAll(extractSearchFields(entityClass));
         }
     }
 
-    public String getClassName() {
-        return className;
+    public final Set<String> extractSearchFields(Class<T> entityClass) {
+        Set<String> fields = new HashSet<>();
+        Field[] declaredFields = entityClass.getDeclaredFields();
+        for (Field field : declaredFields) {
+            Annotation[] annotations = field.getAnnotations();
+            for (Annotation annotation : annotations) {
+                String annotationName = org.hibernate.search.annotations.Field.class.getName();
+                if (annotation.annotationType().getName().equals(annotationName)) {
+                    fields.add(field.getName());
+                }
+            }
+        }
+        return fields;
     }
 
     /**
@@ -187,27 +211,42 @@ public class GenericDao<T extends GenericEntity> {
      *
      * Gets all entities that are persisted to the database
      *
-     * @param listSize The maximum size of the list
+     * @param filter The filter for the search
      * @return All persisted entities
      * @throws DaoException
      */
-    public Optional<List<T>> getAll(Integer listSize) throws DaoException {
-        log.debug("Getting all values of type {} and listsize {} ", entityClass.getSimpleName(), listSize.toString());
+    public Optional<List<T>> getAll(GenericFilter filter) throws DaoException {
+        log.debug("Getting all values of type {} and filter {} ", entityClass.getSimpleName(), filter.toString());
         try {
 
-            Optional<CriteriaQuery<T>> data = this.getCriteriaQuery();
+            FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
+            QueryBuilder qb = fullTextEntityManager.getSearchFactory().buildQueryBuilder().forEntity(entityClass).get();
 
-            if (data.isPresent()) {
-                CriteriaQuery<T> cq = data.get();
-                Root<T> rootEntity = cq.from(entityClass);
-                Order order = new OrderImpl(rootEntity.get(GenericEntity_.updatedDate), true);
-                cq.orderBy(order);
-                CriteriaQuery<T> allQuery = cq.select(rootEntity);
-                return getList(allQuery, listSize);
+            String[] keys = filter.getSearchFields().toArray(new String[filter.getSearchFields().size()]);
+            Optional<String> searchWord = Optional.ofNullable(filter.getGlobalSearchWord());
+            Optional<Pagination> pagination = Optional.ofNullable(filter.getPagination());
+
+            if (!ArrayUtils.isEmpty(keys) && searchWord.isPresent()) {
+                log.trace("Executing Lucene wildcard search, KEYS: {} VALUE: {}", keys, searchWord.get());
+                org.apache.lucene.search.Query query = qb
+                        .keyword()
+                        .wildcard()
+                        .onFields(keys)
+                        .matching(searchWord.get() + "*")
+                        .createQuery();
+
+                Query persistenceQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
+
+                persistenceQuery.setMaxResults(filter.getPagination().getListSize());
+                persistenceQuery.setFirstResult(filter.getPagination().getListSize() * filter.getPagination().getPage());
+
+                return Optional.ofNullable(persistenceQuery.getResultList());
+            } else if (pagination.isPresent()) {
+                return getAll(filter.getPagination());
             } else {
+                log.error("No pagination, search fields or search word present, aborting search");
                 return Optional.empty();
             }
-
         } catch (Exception e) {
             log.error("Error when getting filtered list in Generic Dao");
             throw new DaoException("Error when getting filtered list in Generic Dao", e);
@@ -218,13 +257,13 @@ public class GenericDao<T extends GenericEntity> {
      *
      * Gets all entities that are persisted to the database
      *
+     * @param pagination the pagination for the query
      * @return All persisted entities
      * @throws DaoException
      */
-    public Optional<List<T>> getAll() throws DaoException {
-        log.debug("Getting all values of type {} ", entityClass.getSimpleName());
+    public Optional<List<T>> getAll(Pagination pagination) throws DaoException {
+        log.debug("Getting all values of type {} with pagination {} ", entityClass.getSimpleName(), pagination);
         try {
-
             Optional<CriteriaQuery<T>> data = this.getCriteriaQuery();
             if (data.isPresent()) {
                 CriteriaQuery<T> cq = data.get();
@@ -232,11 +271,10 @@ public class GenericDao<T extends GenericEntity> {
                 Order order = new OrderImpl(rootEntity.get(GenericEntity_.updatedDate), true);
                 cq.orderBy(order);
                 CriteriaQuery<T> allQuery = cq.select(rootEntity);
-                return getList(allQuery);
+                return executeTypedQueryList(em.createQuery(allQuery), pagination);
             } else {
                 return Optional.empty();
             }
-
         } catch (Exception e) {
             log.error("Error when getting all in Generic Dao");
             throw new DaoException("Error when getting all in Generic Dao", e);
@@ -264,43 +302,6 @@ public class GenericDao<T extends GenericEntity> {
 
     /**
      *
-     * Gets a list of entities based on a query
-     *
-     * @param query The query to execute
-     * @return The queried entity list
-     * @throws DaoException
-     */
-    protected Optional<List<T>> getList(CriteriaQuery<T> query) throws DaoException {
-        log.debug("Creating TypedQuery from CriteriaQuery {} ( Unfiltered List )", entityClass.getSimpleName());
-        try {
-            return executeTypedQueryList(em.createQuery(query));
-        } catch (Exception e) {
-            log.error("Error executing query when gettting entity list " + query.getResultType());
-            throw new DaoException("Error executing query when gettting entity list " + query.getResultType(), e);
-        }
-    }
-
-    /**
-     *
-     * Gets a list of entities based on a query
-     *
-     * @param query The query to execute
-     * @param listSize The max size of the list
-     * @return The queried entity list
-     * @throws DaoException
-     */
-    protected Optional<List<T>> getList(CriteriaQuery<T> query, Integer listSize) throws DaoException {
-        log.debug("Creating TypedQuery from CriteriaQuery {} ( Filtered List )", entityClass.getSimpleName());
-        try {
-            return executeTypedQueryList(em.createQuery(query), listSize);
-        } catch (Exception e) {
-            log.error("Error when executing query for get filtered entity list " + query.getResultType());
-            throw new DaoException("Error when executing query for get filtered entity list " + query.getResultType(), e);
-        }
-    }
-
-    /**
-     *
      * Executes a Typed Query
      *
      * @param query The query to execute
@@ -323,14 +324,29 @@ public class GenericDao<T extends GenericEntity> {
      * Executes a Typed Query
      *
      * @param query The query to execute
-     * @param listSize The maxsize of the list
+     * @param pagination
      * @return The queried entity
      * @throws DaoException
      */
-    protected Optional<List<T>> executeTypedQueryList(TypedQuery<T> query, Integer listSize) throws DaoException {
+    protected Optional<List<T>> executeTypedQueryList(TypedQuery<T> query, Pagination pagination) throws DaoException {
         log.trace("Executing TypedQuery ( Filtered List ) for type {} with query: [ {} ]", entityClass.getSimpleName(), query.unwrap(org.hibernate.Query.class).getQueryString());
         try {
-            query.setMaxResults(listSize);
+
+            if (Optional.ofNullable(pagination).isPresent()) {
+
+                Optional<Integer> listSize = Optional.ofNullable(pagination.getListSize());
+                Optional<Integer> page = Optional.ofNullable(pagination.getPage());
+
+                if (listSize.isPresent() && page.isPresent()) {
+                    query.setMaxResults(pagination.getListSize());
+                    query.setFirstResult(pagination.getListSize() * pagination.getPage());
+                } else {
+                    log.error("Pagination present but listsize or page missing {} returning empty list", pagination);
+                    return Optional.empty();
+                }
+
+            }
+
             List<T> resultList = query.getResultList();
             return Optional.ofNullable(resultList);
         } catch (Exception e) {
@@ -356,6 +372,36 @@ public class GenericDao<T extends GenericEntity> {
             log.error("Error when executing TypedQuery [ Get single entity ] for type {} ", entityClass.getSimpleName());
             throw new DaoException("Error when executing TypedQuery [ Get single entity ] for type " + entityClass.getSimpleName(), e);
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Boolean indexEntity() {
+        try {
+            FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
+            fullTextEntityManager.createIndexer().startAndWait();
+        } catch (InterruptedException ex) {
+            log.error("Failure when indexing " + this.className, ex);
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public Boolean indexDb() {
+        try {
+            FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(em);
+            fullTextEntityManager.createIndexer().startAndWait();
+        } catch (InterruptedException ex) {
+            log.error("Failure when indexing " + this.className, ex);
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
 }

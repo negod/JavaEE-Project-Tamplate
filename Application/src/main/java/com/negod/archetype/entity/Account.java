@@ -8,7 +8,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Index;
+import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.Store;
 
 /**
@@ -19,11 +22,10 @@ import org.hibernate.search.annotations.Store;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.NONE)
 @Data
+@Indexed
 public class Account extends GenericEntity {
 
-    private static final long serialVersionUID = 1L;
-
-    @Field(store = Store.YES)
+    @Field(index = Index.YES, analyze = Analyze.YES, store = Store.YES)
     @Column(name = "name", insertable = true, unique = true)
     @XmlElement
     private String name;
