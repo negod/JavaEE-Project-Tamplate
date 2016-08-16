@@ -227,12 +227,12 @@ public class GenericDao<T extends GenericEntity> {
             Optional<Pagination> pagination = Optional.ofNullable(filter.getPagination());
 
             if (!ArrayUtils.isEmpty(keys) && searchWord.isPresent()) {
-                log.trace("Executing Lucene wildcard search, KEYS: {} VALUE: {}", keys, searchWord.get());
+                log.trace("Executing Lucene wildcard search, KEYS: {} VALUE: {}", keys, searchWord.get().toLowerCase());
                 org.apache.lucene.search.Query query = qb
                         .keyword()
                         .wildcard()
                         .onFields(keys)
-                        .matching(searchWord.get() + "*")
+                        .matching(searchWord.get().toLowerCase() + "*")
                         .createQuery();
 
                 Query persistenceQuery = fullTextEntityManager.createFullTextQuery(query, entityClass);
@@ -266,12 +266,19 @@ public class GenericDao<T extends GenericEntity> {
         try {
             Optional<CriteriaQuery<T>> data = this.getCriteriaQuery();
             if (data.isPresent()) {
+
                 CriteriaQuery<T> cq = data.get();
                 Root<T> rootEntity = cq.from(entityClass);
                 Order order = new OrderImpl(rootEntity.get(GenericEntity_.updatedDate), true);
                 cq.orderBy(order);
                 CriteriaQuery<T> allQuery = cq.select(rootEntity);
-                return executeTypedQueryList(em.createQuery(allQuery), pagination);
+
+                if (Optional.ofNullable(pagination.getListSize()).isPresent()
+                        && Optional.ofNullable(pagination.getPage()).isPresent()) {
+                    return executeTypedQueryList(em.createQuery(allQuery), pagination);
+                } else {
+                    return executeTypedQueryList(em.createQuery(allQuery));
+                }
             } else {
                 return Optional.empty();
             }
@@ -279,6 +286,10 @@ public class GenericDao<T extends GenericEntity> {
             log.error("Error when getting all in Generic Dao");
             throw new DaoException("Error when getting all in Generic Dao", e);
         }
+    }
+
+    public Optional<List<T>> getAll() throws DaoException {
+        return getAll(new Pagination());
     }
 
     /**

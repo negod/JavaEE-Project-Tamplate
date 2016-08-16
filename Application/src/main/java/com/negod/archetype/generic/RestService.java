@@ -11,12 +11,40 @@ import javax.ws.rs.core.Response;
 public interface RestService<T extends GenericEntity> {
 
     /**
-     * @return The entitys searchfields
+     *
+     * @param entity The entity to persist
+     * @return The created entity
      * @responseMessage 200 Success
      * @responseMessage 500 Error
-     * @summary Gets all searchable fieldnames
+     * @summary Persists an entity to database
      */
-    public Response getEntitySearchFields();
+    public Response createEntity(T entity);
+
+    /**
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @return Returns all entities
+     * @summary Returns all entitites
+     */
+    public Response getAllEntities();
+
+    /**
+     *
+     * @param entity the entity to update
+     * @return The created entity
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Updates an entity
+     */
+    public Response updateEntity(T entity);
+
+    /**
+     * @param id the external id of the entity to delete
+     * @responseMessage 200 Success
+     * @responseMessage 500 Error
+     * @summary Deletes an entity
+     */
+    public void deleteEntity(String id);
 
     /**
      * @param id The external id of the entity
@@ -37,31 +65,11 @@ public interface RestService<T extends GenericEntity> {
     public Response getFilteredEntityList(GenericFilter filter);
 
     /**
-     *
-     * @param entity The entity to persist
-     * @return The created entity
+     * @return The entitys searchfields
      * @responseMessage 200 Success
      * @responseMessage 500 Error
-     * @summary Persists an entity to database
+     * @summary Gets all searchable fieldnames
      */
-    public Response createEntity(T entity);
-
-    /**
-     *
-     * @param entity the entity to update
-     * @return The created entity
-     * @responseMessage 200 Success
-     * @responseMessage 500 Error
-     * @summary Updates an entity
-     */
-    public Response updateEntity(T entity);
-
-    /**
-     * @param id the external id of the entity to delete
-     * @responseMessage 200 Success
-     * @responseMessage 500 Error
-     * @summary Deletes an entity
-     */
-    public void deleteEntity(String id);
+    public Response getEntitySearchFields();
 
 }

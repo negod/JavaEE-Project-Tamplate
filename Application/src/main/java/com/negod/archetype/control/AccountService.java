@@ -43,34 +43,22 @@ public class AccountService extends GenericRestService<Account> {
     /**
      * {@inheritDoc}
      *
-     * @responseType com.negod.archetype.entity.Account
+     * @summary Get all Accounts
+     * @responseType java.lang.Boolean
      */
     @GET
-    @Path("/{id}")
+    @Path("/")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Override
-    public Response getEntityById(@PathParam("id") String id) {
-        return super.getById(id);
+    public Response getAllEntities() {
+        return super.getAll();
     }
 
     /**
      * {@inheritDoc}
      *
-     * @responseType java.util.List<com.negod.archetype.entity.Account>
-     */
-    @POST
-    @Path("/list")
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @Override
-    public Response getFilteredEntityList(GenericFilter filter) {
-        return super.getFilteredList(filter);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
+     * @summary Creates an Account
      * @responseType com.negod.archetype.entity.Account
      * @param entity
      */
@@ -86,6 +74,7 @@ public class AccountService extends GenericRestService<Account> {
     /**
      * {@inheritDoc}
      *
+     * @summary Updates an Account
      * @responseType com.negod.archetype.entity.Account
      * @param entity
      */
@@ -101,6 +90,7 @@ public class AccountService extends GenericRestService<Account> {
     /**
      * {@inheritDoc}
      *
+     * @summary Deletes an Account
      * @param id
      */
     @DELETE
@@ -115,10 +105,41 @@ public class AccountService extends GenericRestService<Account> {
     /**
      * {@inheritDoc}
      *
+     * @summary Gets an Account by id
+     * @responseType com.negod.archetype.entity.Account
+     */
+    @GET
+    @Path("/{id}")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Override
+    public Response getEntityById(@PathParam("id") String id) {
+        return super.getById(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @summary Gets a filtered Acocunt list
+     * @responseType java.util.List<com.negod.archetype.entity.Account>
+     */
+    @POST
+    @Path("/list")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    @Override
+    public Response getFilteredEntityList(GenericFilter filter) {
+        return super.getFilteredList(filter);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @summary Gets all searchable fields
      * @responseType java.lang.String
      */
     @GET
-    @Path("/searchfields")
+    @Path("/search/fields")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Override
@@ -129,6 +150,7 @@ public class AccountService extends GenericRestService<Account> {
     /**
      * {@inheritDoc}
      *
+     * @summary Reindexes all Accounts
      * @responseType java.lang.Boolean
      */
     @GET

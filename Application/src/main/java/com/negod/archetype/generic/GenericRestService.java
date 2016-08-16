@@ -21,13 +21,74 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
     public abstract GenericDao getDao();
 
     /**
-     * Gets all searchfields available in the entity
+     * Creates an entity
      *
+     * @param entity
      * @return
      */
-    public Response getSearchFields() {
-        Set<String> searchFields = getDao().getSearchFields();
-        return Response.ok(searchFields, MediaType.APPLICATION_JSON).build();
+    public Response create(T entity) {
+        log.debug("Creating {} with values {}", getDao().getClassName(), entity.toString());
+        try {
+            Optional<T> createdEntity = getDao().persist(entity);
+            if (createdEntity.isPresent()) {
+                return Response.ok(createdEntity.get(), MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.serverError().build();
+            }
+        } catch (Exception e) {
+            log.error("Error when creating {} with values {}", getDao().getClassName(), entity.toString(), e);
+            return Response.serverError().build();
+        }
+    }
+
+    public Response getAll() {
+        try {
+            log.debug("Getting all of type {}" + getDao().getClassName());
+            Optional<List<T>> entityList = getDao().getAll();
+            if (entityList.isPresent()) {
+                return Response.ok(entityList.get(), MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.noContent().build();
+            }
+        } catch (Exception e) {
+            log.debug("Error when getting all of type {}", getDao().getClassName());
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * Updates an entity
+     *
+     * @param entity
+     * @return
+     */
+    public Response update(T entity) {
+        log.debug("Updating {} with values {}", getDao().getClassName(), entity.toString());
+        try {
+            Optional<T> updatedEntity = getDao().update(entity);
+            if (updatedEntity.isPresent()) {
+                return Response.ok(updatedEntity.get(), MediaType.APPLICATION_JSON).build();
+            } else {
+                return Response.serverError().build();
+            }
+        } catch (Exception e) {
+            log.error("Error when updating {} with values {}", getDao().getClassName(), entity.toString(), e);
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * Deletes an entity
+     *
+     * @param id
+     */
+    public void delete(String id) {
+        log.debug("Deleting {} with ID {}", getDao().getClassName(), id);
+        try {
+            getDao().delete(id);
+        } catch (Exception e) {
+            log.error("Error when deleting {} with id {} ", getDao().getClassName(), id, e);
+        }
     }
 
     /**
@@ -38,7 +99,7 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
      */
     public Response getById(String id) {
         try {
-            log.debug("Getting " + getDao().getClassName() + " by id: {}", id);
+            log.debug("Getting {} by id: {}", getDao().getClassName(), id);
             Optional<T> entity = getDao().getById(id);
             if (entity.isPresent()) {
                 return Response.ok(entity.get(), MediaType.APPLICATION_JSON).build();
@@ -46,7 +107,7 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
                 return Response.noContent().build();
             }
         } catch (Exception e) {
-            log.debug("Error when getting " + getDao().getClassName() + " by id: {}", id);
+            log.debug("Error when getting {} by id: {}", getDao().getClassName(), id);
             return Response.serverError().build();
         }
     }
@@ -59,7 +120,7 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
      */
     public Response getFilteredList(GenericFilter filter) {
         try {
-            log.debug("Getting all " + getDao().getClassName() + " with filter " + filter);
+            log.debug("Getting all {} with filter {}", getDao().getClassName(), filter.toString());
             Optional<List<T>> responseList = getDao().getAll(filter);
             if (responseList.isPresent()) {
                 List<T> entityList = responseList.get();
@@ -74,59 +135,14 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
     }
 
     /**
-     * Creates an entity
+     * Gets all searchfields available in the entity
      *
-     * @param entity
      * @return
      */
-    public Response create(T entity) {
-        log.debug("Creating " + getDao().getClassName() + " {}", entity.toString());
-        try {
-            Optional<T> createdEntity = getDao().persist(entity);
-            if (createdEntity.isPresent()) {
-                return Response.ok(createdEntity.get(), MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.serverError().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when creating " + getDao().getClassName() + " {}", entity.toString(), e);
-            return Response.serverError().build();
-        }
-    }
-
-    /**
-     * Updates an entity
-     *
-     * @param entity
-     * @return
-     */
-    public Response update(T entity) {
-        log.debug("Updating " + getDao().getClassName() + " {}", entity.toString());
-        try {
-            Optional<T> updatedEntity = getDao().update(entity);
-            if (updatedEntity.isPresent()) {
-                return Response.ok(updatedEntity.get(), MediaType.APPLICATION_JSON).build();
-            } else {
-                return Response.serverError().build();
-            }
-        } catch (Exception e) {
-            log.error("Error when updating " + getDao().getClassName() + " {}", entity.toString(), e);
-            return Response.serverError().build();
-        }
-    }
-
-    /**
-     * Deletes an entity
-     *
-     * @param id
-     */
-    public void delete(String id) {
-        log.debug("Deleting " + getDao().getClassName() + " with ID {}", id);
-        try {
-            getDao().delete(id);
-        } catch (Exception e) {
-            log.error("Error when deleting " + getDao().getClassName() + " with id {}", id, e);
-        }
+    public Response getSearchFields() {
+        log.debug("Getting all search fields for {} ", getDao().getClassName());
+        Set<String> searchFields = getDao().getSearchFields();
+        return Response.ok(searchFields, MediaType.APPLICATION_JSON).build();
     }
 
     /**
@@ -135,6 +151,7 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
      * @return
      */
     public Response indexEntity() {
+        log.debug("Indexing entity {} ", getDao().getClassName());
         return Response.ok(getDao().indexEntity(), MediaType.WILDCARD_TYPE).build();
     }
 
