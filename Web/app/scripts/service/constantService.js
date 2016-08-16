@@ -5,7 +5,15 @@ angular.module('webApp')
             return{
                 baseUrl: "http://localhost:29080/application/rest",
                 messageTimeout: 4000,
-                defaultListFetchSize: 10
+                searchQuery: {
+                    searchFields: [
+                    ],
+                    globalSearchWord: null,
+                    pagination: {
+                        listSize: 10,
+                        page: 0
+                    }
+                }
             };
         });
 

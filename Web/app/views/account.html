@@ -8,10 +8,26 @@
 
         <div class="panel-heading" id="accountList-panel-heading">
 
-            <button ng-show="error === undefined" ng-click="showModal('md')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
-                <span class="glyphicon glyphicon-plus"/>
-            </button>
-            <h4 id="panelHeader">Accounts</h4>
+            <div>
+                <h4 id="panelHeader">Accounts</h4>
+                <button ng-show="error === undefined" ng-click="showModal('md')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
+                    <span class="glyphicon glyphicon-plus"/>
+                </button>
+            </div>
+
+            <div style="padding-top: 10px">
+                <input name="name" 
+                       required 
+                       class="form-control" 
+                       type="text" 
+                       ng-model="searchQuery.globalSearchWord" 
+                       placeholder="Search ( {{searchQuery.searchFields| ArrayFilter}} )" 
+                       autofocus
+                       popover-trigger="'focus'"
+                       title="Search the table"
+                       ng-show="searchQuery.searchFields.length > 0"
+                       on-enter-click="search()"/> 
+            </div>
 
         </div>
         <div class="panel-body">

@@ -11,15 +11,22 @@ angular.module('webApp')
         .controller('AccountListCtrl', function ($scope, $accountService, $constantService, $uibModal, $log) {
 
             $scope.accounts = $accountService.getAll();
-            $scope.initListSize = $constantService.defaultListFetchSize;
-            $scope.currentListSize = $scope.initListSize;
 
+            $scope.searchQuery = angular.copy($constantService.searchQuery);
+            var initListSize = $scope.searchQuery.pagination.listSize;
+            $scope.searchQuery.searchFields = $accountService.searchFields();
 
             $scope.getMore = function () {
-                if ($scope.currentListSize === $scope.accounts.length) {
-                    $accountService.getList($scope.currentListSize += $scope.initListSize);
+                if ($scope.searchQuery.pagination.listSize === $scope.accounts.length) {
+                    $scope.searchQuery.pagination.listSize += initListSize;
+                    $accountService.getList($scope.searchQuery);
                 }
             };
+
+            $scope.search = function () {
+                $accountService.getList($scope.searchQuery);
+                $scope.accounts = $accountService.getAll();
+            }
 
             $scope.deleteAccount = function (account) {
                 $accountService.delete(account);
