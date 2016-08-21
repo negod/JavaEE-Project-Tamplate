@@ -79,12 +79,12 @@ public class AccountService extends GenericRestService<Account> {
      * @param entity
      */
     @PUT
-    @Path("/")
+    @Path("/{id}")
     @Consumes({MediaType.APPLICATION_JSON})
     @Produces({MediaType.APPLICATION_JSON})
     @Override
-    public Response updateEntity(Account entity) {
-        return super.update(entity);
+    public Response updateEntity(@PathParam("id") String id, Account entity) {
+        return super.update(id, entity);
     }
 
     /**

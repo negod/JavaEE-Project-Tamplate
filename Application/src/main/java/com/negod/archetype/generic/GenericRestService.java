@@ -62,7 +62,7 @@ public abstract class GenericRestService<T extends GenericEntity> implements Res
      * @param entity
      * @return
      */
-    public Response update(T entity) {
+    public Response update(String id, T entity) {
         log.debug("Updating {} with values {}", getDao().getClassName(), entity.toString());
         try {
             Optional<T> updatedEntity = getDao().update(entity);

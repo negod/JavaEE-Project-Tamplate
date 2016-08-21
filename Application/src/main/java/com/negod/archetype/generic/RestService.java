@@ -30,13 +30,14 @@ public interface RestService<T extends GenericEntity> {
 
     /**
      *
+     * @param id
      * @param entity the entity to update
      * @return The created entity
      * @responseMessage 200 Success
      * @responseMessage 500 Error
      * @summary Updates an entity
      */
-    public Response updateEntity(T entity);
+    public Response updateEntity(String id, T entity);
 
     /**
      * @param id the external id of the entity to delete
