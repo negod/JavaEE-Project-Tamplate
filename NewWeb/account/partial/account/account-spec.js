@@ -1,6 +1,6 @@
 describe('AccountCtrl', function() {
 
-    beforeEach(module('webapp'));
+    beforeEach(module('account'));
 
     var scope,ctrl;
 
@@ -12,7 +12,7 @@ describe('AccountCtrl', function() {
     it('should ...', inject(function() {
 
         expect(1).toEqual(1);
-        
+
     }));
 
 });

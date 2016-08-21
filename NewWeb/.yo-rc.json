@@ -18,6 +18,16 @@
         "marker": "/* Add Component LESS Above */",
         "template": "@import \"<%= filename %>\";"
       }
-    }
+    },
+    "modules": [
+      {
+        "name": "account",
+        "file": "account\\account.js"
+      },
+      {
+        "name": "common",
+        "file": "common\\common.js"
+      }
+    ]
   }
 }
