@@ -11,7 +11,6 @@ angular.module('account').controller('AccountsCtrl', function ($scope, accountSe
         var page = $scope.searchQuery.pagination.page + 1;
         if ((listSize * page) === $scope.accounts.length) {
             accountService.list($scope.searchQuery).$promise.then(function (response) {
-                $log.info(response);
                 $scope.accounts = $scope.accounts.concat(response);
             });
             $scope.searchQuery.pagination.page += 1;

@@ -7,28 +7,31 @@ angular.module('account').controller('AccountCtrl', function ($scope, accountSer
         text: account !== undefined ? "Edit Account" : "Create new Account"
     };
 
+    $scope.oldAccount = angular.copy(account, $scope.account);
     $scope.account = account;
 
     $scope.save = function () {
-
         if ($scope.selections.edit === true) {
-            accountService.update($scope.account).$promise.then(function (response) {
-                //messageService.success("Acocunt updated");
+            $scope.account.$update(function (response) {
+                $scope.$dismiss('cancel');
             });
         } else {
-            accountService.save($scope.account).$promise.then(function (response) {
+            accountService.save($scope.account, function (response) {
                 accounts.push(response);
-                //messageService.success("Acocunt created");
+                $scope.account = {};
             });
         }
 
         if ($scope.selections.addMore === false || $scope.selections.edit === true) {
-            $scope.cancel();
+            $scope.$dismiss('cancel');
         }
 
     };
 
     $scope.cancel = function () {
+        if ($scope.selections.edit === true) {
+            $scope.account = angular.copy($scope.oldAccount, $scope.account);
+        }
         $scope.$dismiss('cancel');
     };
 

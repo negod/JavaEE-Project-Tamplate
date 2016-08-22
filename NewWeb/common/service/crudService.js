@@ -6,16 +6,18 @@ angular.module('common').factory('CrudService', function (constantService, $reso
                     list: {
                         method: 'POST',
                         isArray: true,
-                        params: {},
                         url: serviceUrl + '/list'},
+                    create: {
+                        method: 'POST',
+                        isArray: false,
+                        url: serviceUrl
+                    },
                     searchFields: {
                         method: 'GET',
                         isArray: true,
-                        params: {},
                         url: serviceUrl + '/search/fields'},
                     update: {
                         method: 'PUT',
-                        params: {},
                     }
                 });
     };
