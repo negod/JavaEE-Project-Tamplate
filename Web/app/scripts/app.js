@@ -8,6 +8,7 @@
  *
  * Main module of the application.
  */
+
 angular
         .module('webApp', [
             'ngAnimate',
@@ -16,7 +17,7 @@ angular
             'ngRoute',
             'ngSanitize',
             'ngTouch',
-            'ui.bootstrap'            
+            'ui.bootstrap'
         ])
         .config(function ($routeProvider) {
             $routeProvider

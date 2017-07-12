@@ -8,7 +8,7 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('CreateAccountCtrl', function ($scope, accountService, messageService, $log, account) {
+        .controller('CreateAccountCtrl', function ($scope, AccountService, messageService, $log, account) {
 
             $scope.selections = {
                 addMore: true,
@@ -17,7 +17,7 @@ angular.module('webApp')
             };
 
             if ($scope.selections.edit === false) {
-                $scope.account = accountService.getEmpty();
+                $scope.account = AccountService.getEmpty();
             } else {
                 $scope.account = account;
                 $scope.oldAccount = angular.copy(account);
@@ -38,7 +38,7 @@ angular.module('webApp')
                     if ($scope.selections.edit === true) {
                         messageService.success("Acocunt updated");
                     } else {
-                        $scope.account = accountService.getEmpty();
+                        $scope.account = AccountService.getEmpty();
                         messageService.success("Acocunt created");
                     }
 
@@ -48,9 +48,9 @@ angular.module('webApp')
                 };
 
                 if ($scope.selections.edit === true) {
-                    accountService.update($scope.account).then(onSuccess, onError);
+                    AccountService.update($scope.account).then(onSuccess, onError);
                 } else {
-                    accountService.create($scope.account).then(onSuccess, onError);
+                    AccountService.create($scope.account).then(onSuccess, onError);
                 }
             };
 

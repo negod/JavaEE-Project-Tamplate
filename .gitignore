@@ -15,3 +15,7 @@ node_modules
 /Web/nbproject/project.properties
 /Web/nbproject
 /Application/nb-configuration.xml
+/NewWeb/nbproject/private/
+/NewWeb/nbproject
+/Application/nbproject/
+/Application/src/main/resources/app.properties

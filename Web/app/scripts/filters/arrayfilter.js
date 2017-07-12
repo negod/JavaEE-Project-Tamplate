@@ -11,8 +11,10 @@
 angular.module('webApp')
         .filter('ArrayFilter', function () {
             return function (value) {
-                if (!angular.isArray(value))
+                if (!angular.isArray(value)) {
                     return '';
-                return value.join(', ');
+                } else {
+                    return value.join(', ');
+                }
             };
         });

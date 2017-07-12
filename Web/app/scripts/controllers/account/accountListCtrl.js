@@ -8,22 +8,20 @@
  * Controller of the webApp
  */
 angular.module('webApp')
-        .controller('AccountListCtrl', function ($scope, Account, constantService, $uibModal, $log) {
+        .controller('AccountListCtrl', function ($scope, AccountService, ConstantService, $uibModal, $log) {
 
-            $scope.searchQuery = angular.copy(constantService.searchQuery);
+            $scope.searchQuery = angular.copy(ConstantService.searchQuery);
             var initListSize = $scope.searchQuery.pagination.listSize;
-            $scope.searchQuery.searchFields = Account.searchFields();
+            $scope.searchQuery.searchFields = AccountService.searchFields();
 
             $scope.accounts = [];
 
             $scope.getAccounts = function (query) {
-                Account.list(query).then(
-                        function (response) {
-                            response.forEach(function (entry) {
-                                $scope.accounts.push(entry);
-                            });
-                        }
-                );
+                AccountService.list(query).then(function (response) {
+                    response.forEach(function (entry) {
+                        $scope.accounts.push(entry);
+                    });
+                });
             };
             $scope.getAccounts($scope.searchQuery);
 
@@ -44,7 +42,7 @@ angular.module('webApp')
             }
 
             $scope.deleteAccount = function (account) {
-                Account.delete(account);
+                AccountService.delete(account);
             };
 
             $scope.showModal = function (size, account) {

@@ -1,0 +1,24 @@
+@error-color-background:#f2dede;  
+@ok-color-background:#f2dede;  
+@warning-color-background:#f2dede;  
+@color-foreground:white;
+
+.message-info{
+    color: @color-foreground;
+    font-weight: bold;
+}
+
+.error{
+    &:extend(.message-info);
+    background-color: @error-color-background;    
+}
+
+.ok{
+    color: @color-foreground;
+    background-color:@ok-color-background;
+}
+
+.warning{
+    color: @color-foreground;
+    background-color: @warning-color-background;
+}

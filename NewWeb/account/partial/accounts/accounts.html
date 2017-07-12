@@ -1,15 +1,16 @@
 <div class="col-md-12" ng-controller="AccountsCtrl">
-    <div ng-show="error !== undefined" class="alert alert-danger" role="alert">
-        <a href="#" class="alert-link">Error encountered on page!></a>
-    </div>
+
+
 
     <div class="panel panel-primary">
+
+        <div ng-include="'common/partial/message/message.html'"/>
 
         <div class="panel-heading" id="accountList-panel-heading">
 
             <div>
                 <h4 id="panelHeader">Accounts</h4>
-                <button ng-show="error === undefined" ng-click="showModal('md')" id="addButton" type="button" class="btn btn-default btn-default btn-round pull-right">
+                <button ng-show="error === undefined" ng-click="showModal('md')" id="addButton" type="button" class="btn btn-default btn-round pull-right">
                     <span class="glyphicon glyphicon-plus"/>
                 </button>
             </div>

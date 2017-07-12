@@ -6,8 +6,7 @@
  * @description
  * # test
  */
-angular.module('webApp')
-        .directive('confirm', function (ConfirmService) {
+angular.module('webApp').directive('confirm', function (confirmService) {
             return {
                 restrict: 'A',
                 scope: {
@@ -16,7 +15,7 @@ angular.module('webApp')
                 link: function (scope, element, attrs) {
                     element.unbind("click");
                     element.bind("click", function (e) {
-                        ConfirmService.open(attrs.confirm, scope.eventHandler);
+                        confirmService.open(attrs.confirm, scope.eventHandler);
                     });
                 }
             };

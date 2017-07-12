@@ -3,13 +3,13 @@
     
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.negod.archetype</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <groupId>se.backede</groupId>
+        <version>1.5</version>
     </parent>
     
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.negod.archetype</groupId>
+    <groupId>se.backede.archetype</groupId>
     <artifactId>application</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
@@ -17,27 +17,16 @@
     <name>Application</name>
     
     <properties>
-        
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        
+
         <!-- JPA DEPENDENCIES-->
         <hibernate.core.version>5.1.0.Final</hibernate.core.version>
         <hibernate.validator.version>5.2.4.Final</hibernate.validator.version>
         <hibernate.search.version>5.5.3.Final</hibernate.search.version>
         <hibernate.search.infispan.version>5.5.2.Final</hibernate.search.infispan.version>
         
-        <!-- LOGGING DEPENDENCIES -->
-        <slf4j.version>1.7.21</slf4j.version>
-        <logback.version>1.1.7</logback.version>
-        
         <!-- SWAGGER GENERATION -->
-        <swagger.hostname>localhost</swagger.hostname>
-        <swagger.port>29080</swagger.port>
-        
-        <!-- OTHER DEPENDENCIES -->
-        <lombok.version>1.14.8</lombok.version>
-        <apache.common.version>3.4</apache.common.version>
+        <swagger.hostname>192.168.2.140</swagger.hostname>
+        <swagger.port>8082</swagger.port>
         
         <!-- LOGGING configuration -->
         <application.name>${project.artifactId}</application.name>
@@ -48,17 +37,22 @@
         <!-- JTA settings -->
         <hibernate.transaction.jta.platform>org.hibernate.service.jta.platform.internal.SunOneJtaPlatform</hibernate.transaction.jta.platform>
         <hibernate.dialect>org.hibernate.dialect.DerbyDialect</hibernate.dialect>
+        
     </properties>
     
     <dependencies>
         
         <!-- Commons -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${apache.common.version}</version>
+            <groupId>se.backede.generics</groupId>
+            <artifactId>persistence</artifactId>
+            <version>1.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>se.backede.generics</groupId>
+            <artifactId>webservice</artifactId>
+            <version>1.0</version>
+        </dependency>
         
         <!-- JPA provider -->
         <dependency>
@@ -183,7 +177,7 @@
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-maven-plugin</artifactId>
-                        <version>1.0.2.Final</version>
+                        <version>1.1.0.Final</version>
                         <configuration>
                             <filename>${project.build.finalName}.${project.packaging}</filename>
                             <targetDir>${project.build.directory}</targetDir>
@@ -199,7 +193,7 @@
         </profile>  
         
         <!-- GENERATE HIBERNATE JPA MODEL FOR CRITERIA QUERIES FROM ENTITITES ( Use maven command below ) -->
-        <!-- mvn clean install -Pgenerate-jpa-mode -->
+        <!-- mvn clean install -Pgenerate-jpa-model -->
         <profile>
             <id>generate-jpa-model</id>
             <build>
@@ -312,9 +306,14 @@
                         <configuration>
                             <webResources>
                                 <resource>
-                                    <directory>${project.basedir}/src/main/webapp/WEB-INF</directory>
+                                    <directory>${project.basedir}/src/main/resources/WEB-INF</directory>
                                     <filtering>true</filtering>
                                     <targetPath>WEB-INF</targetPath>
+                                </resource>
+                                <resource>
+                                    <directory>${project.basedir}/src/main/resources/META-INF</directory>
+                                    <filtering>true</filtering>
+                                    <targetPath>META-INF</targetPath>
                                 </resource>
                             </webResources>
                             <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>

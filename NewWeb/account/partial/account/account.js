@@ -1,4 +1,4 @@
-angular.module('account').controller('AccountCtrl', function ($scope, accountService, $log, account, accounts) {
+angular.module('account').controller('AccountCtrl', function ($scope, accountService, messageService, account, accounts) {
 
 
     $scope.selections = {
@@ -13,12 +13,14 @@ angular.module('account').controller('AccountCtrl', function ($scope, accountSer
     $scope.save = function () {
         if ($scope.selections.edit === true) {
             $scope.account.$update(function (response) {
+                messageService.info("Account updated");
                 $scope.$dismiss('cancel');
             });
         } else {
             accountService.save($scope.account, function (response) {
                 accounts.push(response);
                 $scope.account = {};
+                messageService.info("Account created");
             });
         }
 

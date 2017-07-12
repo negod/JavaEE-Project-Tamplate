@@ -1,8 +1,9 @@
 <form name="addAccount" ng-submit="save(account)">
 
-    <!--div ng-include="'views/message/message.html'"/-->
+
 
     <div class="modal-header">
+        <div ng-include="'common/partial/message/message.html'"/>
         <button type="button" class="close pull-right" ng-click="$dismiss()" aria-hidden="true">&times;</button>
         <h3 class="modal-title">{{selections.text}}</h3>
     </div>
