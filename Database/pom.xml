@@ -3,7 +3,7 @@
     
     <parent>
         <groupId>se.backede.archetype</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>jee-archetype</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     

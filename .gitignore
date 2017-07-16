@@ -19,3 +19,8 @@ node_modules
 /NewWeb/nbproject
 /Application/nbproject/
 /Application/src/main/resources/app.properties
+/Application/nbactions.xml
+/Application/lib/
+/target/
+Database/src/main/resources/app.properties
+src/main/resources/app.properties
